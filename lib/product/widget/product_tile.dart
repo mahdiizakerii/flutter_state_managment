@@ -24,7 +24,13 @@ class ProductTile extends StatelessWidget {
         ),
         title: Text(product.name),
         subtitle: Text(product.description),
-        trailing: Checkbox(value: product.isSelected, onChanged: onChanged),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(product.price.toStringAsFixed(2)),
+            Checkbox(value: product.isSelected, onChanged: onChanged),
+          ],
+        ),
       ),
     );
   }
