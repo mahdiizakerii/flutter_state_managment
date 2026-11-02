@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_state_managment/product/models/product.dart';
+import 'package:flutter_state_managment/providers/product_provider.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
-  final List<Product> cartItem;
-  const CartScreen({super.key, required this.cartItem});
+  const CartScreen({super.key});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  double get totalPrice {
-    return widget.cartItem.fold(0, (sum, product) => sum + product.price);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<ProductProvider>();
+    final cartItems = provider.seletedProducts;
+    final totalPrice = provider.totalPrice;
+
     return Scaffold(
       appBar: AppBar(title: const Text('My Cart')),
-      body: widget.cartItem.isEmpty
+      body: cartItems.isEmpty
           ? const Center(child: Text('Your cart is empty'))
           : ListView.builder(
-              itemCount: widget.cartItem.length,
+              itemCount: cartItems.length,
               itemBuilder: (context, index) {
-                final product = widget.cartItem[index];
+                final product = cartItems[index];
                 return ListTile(
+                  leading: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: product.color,
+                    child: Text(
+                      product.name[0].toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   title: Text(product.name),
                   subtitle: Text(product.description),
                   trailing: Text('\$${product.price.toStringAsFixed(2)}'),
