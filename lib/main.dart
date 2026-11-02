@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter State Managment',
         theme: ThemeData(useMaterial3: true),
-        home: const ProductListScreens(),
+        home: ProductListScreens(),
       ),
     );
   }
