@@ -78,4 +78,8 @@ class ProductProvider extends ChangeNotifier {
 
   List<Product> get seletedProducts =>
       _products.where((products) => products.isSelected).toList();
+
+  double get totalPrice {
+    return seletedProducts.fold(0, (sum, product) => sum + product.price);
+  }
 }
