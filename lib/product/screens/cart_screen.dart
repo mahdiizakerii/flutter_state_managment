@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_state_managment/providers/product_provider.dart';
-import 'package:provider/provider.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final provider = context.watch<ProductProvider>();
-    final cartItems = provider.seletedProducts;
-    final totalPrice = provider.totalPrice;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartItems = ref.watch(selectedProductsProvider);
+    final totalPrice = ref.watch(totalPriceProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('My Cart')),
