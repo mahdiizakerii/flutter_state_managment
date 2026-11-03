@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_state_managment/product/screens/cart_screen.dart';
 import 'package:flutter_state_managment/product/widget/product_tile.dart';
 import 'package:flutter_state_managment/providers/product_provider.dart';
-import 'package:provider/provider.dart';
 
-class ProductListScreens extends StatelessWidget {
-  ProductListScreens({super.key});
+class ProductListScreens extends ConsumerWidget {
+  const ProductListScreens({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedCount = context
-        .watch<ProductProvider>()
-        .seletedProducts
-        .length;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final products = ref.watch(productProvider);
+    final selectedCount = ref.watch(selectedProductsProvider).length;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Products'),
+        title: const Text('Products'),
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: Icon(Icons.shopping_bag_outlined),
+                icon: const Icon(Icons.shopping_bag_outlined),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -48,20 +47,17 @@ class ProductListScreens extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<ProductProvider>(
-        builder: (context, provider, _) {
-          return ListView.builder(
-            itemCount: provider.products.length,
-            itemBuilder: (context, index) {
-              final product = provider.products[index];
-              return ProductTile(
-                product: product,
-                onChanged: (value) {
-                  context.read<ProductProvider>().toggleProductSelection(
-                    product,
-                  );
-                },
-              );
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+
+          return ProductTile(
+            product: product,
+            onChanged: (value) {
+              ref
+                  .read(productProvider.notifier)
+                  .toggleProductSelection(product);
             },
           );
         },
